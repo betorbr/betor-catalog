@@ -37,8 +37,11 @@ export default (content, { title, q } = {}) => (`<!doctype html>
   </div>
   <main>${content}</main>
   <footer>
-    <p><strong>Contato/Dúvidas:</strong> douglas@dgls.me</p>
-    <p><a href="https://github.com/dougppaz/betor-catalog" target="_blank">Github</a></p>
+    <ul>
+      <li><a href="https://betor.top" target="_blank">BeTor</a></li>
+      <li><a href="https://github.com/dougppaz/betor-catalog" target="_blank">Github - betor-catalog</a></li>
+    </ul>
+    <p><strong>Contato/Dúvidas:</strong> betor@betor.top</p>
   </footer>
 </body>
 </html>`)
