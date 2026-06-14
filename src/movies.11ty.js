@@ -1,16 +1,16 @@
-import renderItems from './render/pages/items.js'
+import renderPaginatedPage from './components/pages/paginated.js'
 
 export default class Movies {
   data () {
     return {
       pagination: {
         data: 'movies',
-        size: 50,
+        size: 20,
         alias: 'item'
       },
       permalink: ({ pagination }) => {
         if (pagination.pageNumber > 0) {
-          return `filmes/${pagination.pageNumber + 1}/index.html`
+          return `filmes/page/${pagination.pageNumber + 1}/index.html`
         }
         return 'filmes/index.html'
       }
@@ -18,6 +18,6 @@ export default class Movies {
   }
 
   render ({ pagination }) {
-    return renderItems(pagination, 'Filmes - Catálogo BeTor')
+    return renderPaginatedPage(pagination, 'Catálogo BeTor Filmes')
   }
 }

@@ -140,6 +140,3 @@ vite.config.ts.timestamp-*
 
 # items data
 /src/_data
-
-# cf wrangler
-.wrangler
