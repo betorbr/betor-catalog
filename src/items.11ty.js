@@ -1,23 +1,23 @@
 import renderItems from './render/pages/items.js'
 
-export default class Tvs {
+export default class Items {
   data () {
     return {
       pagination: {
-        data: 'tvs',
+        data: 'items',
         size: 50,
         alias: 'item'
       },
       permalink: ({ pagination }) => {
         if (pagination.pageNumber > 0) {
-          return `series/${pagination.pageNumber + 1}/index.html`
+          return `filmes-e-series/${pagination.pageNumber + 1}/index.html`
         }
-        return 'series/index.html'
+        return 'filmes-e-series/index.html'
       }
     }
   }
 
   render ({ pagination }) {
-    return renderItems(pagination, 'Séries - Catálogo BeTor')
+    return renderItems(pagination, 'Filmes e Séries - Catálogo BeTor')
   }
 }
