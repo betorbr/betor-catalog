@@ -92,7 +92,7 @@ const fetch = async (request, env, ctx) => {
       q,
       content: `
         <section>
-          <h2>Resultado da busca por: ${q}</h2>
+          <h2>Resultado da busca por: ${q}${season ? ` - Temporada ${season}` : ''}</h2>
           <div class="results">
             ${resultContent}
           </div>
