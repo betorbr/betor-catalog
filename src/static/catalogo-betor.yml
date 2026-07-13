@@ -26,6 +26,7 @@ search:
     - path: "{{ if .Query.Q }}/search/{{ else }}/{{ end }}{{ if .Query.IMDBID }}imdb/{{ .Query.IMDBID }}/{{ else }}{{ end }}{{ if and (.Query.IMDBID) (.Query.Season) }}season/{{ .Query.Season }}/{{ else }}{{ end }}{{ if or (.Query.IMDBID) (.Query.Season) }}{{ else }}series/{{ end }}"
       inputs:
         q: "{{ .Query.Q }}"
+        season: "{{ .Query.Season }}"
       categories: ["tv"]
   rows:
     selector: "[data-torrent]"
