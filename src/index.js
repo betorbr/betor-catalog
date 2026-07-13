@@ -191,7 +191,14 @@ class BetorCatalog {
 
     const items = await itemsDownloadUrlRes.json()
     console.log(`${Array.isArray(items) ? items.length : 0} items downloaded`)
-    const sortedItems = items.sort((a, b) => new Date(b.inserted_at) - new Date(a.inserted_at))
+    const validItems = items.filter(item => (
+      item.imdb_id != null &&
+      item.item_type != null &&
+      item.magnet_uri != null &&
+      item.torrent_size != null
+    ))
+    console.log(`${validItems.length} valid items`)
+    const sortedItems = validItems.sort((a, b) => new Date(b.inserted_at) - new Date(a.inserted_at))
 
     this.write(ITEMS_PATH, sortedItems)
     console.log(`items fetched and written to file: ${ITEMS_PATH}`)
