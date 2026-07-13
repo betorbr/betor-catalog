@@ -33,6 +33,7 @@ const expandSearchItem = (item) => ({
     torrent_files: nested.fs,
     torrent_num_peers: nested.np,
     torrent_num_seeds: nested.ns,
+    seasons: nested.ss,
     updated_at: nested.ua,
     inserted_at: nested.ia
   }))
@@ -54,6 +55,8 @@ const fuse = new Fuse(searchCatalog, {
 const fetch = async (request, env, ctx) => {
   const url = new URL(request.url)
   const q = url.searchParams.get('q') || ''
+  const seasonValue = url.searchParams.get('season') || null
+  const season = seasonValue ? parseInt(seasonValue) : null
   if (!q.trim()) {
     return new Response(null, { status: 404 })
   }
@@ -62,7 +65,24 @@ const fetch = async (request, env, ctx) => {
     ...result,
     item: expandSearchItem(result.item)
   }))
-  const resultContent = expandedResults.map(({ item }) => renderCatalogFullItem(item)).join('')
+  const filteredResults = expandedResults.filter(({ item }) => {
+    if (season) {
+      return item.available_seasons?.includes(season)
+    }
+    return true
+  }).map(({ item }) => {
+    if (!season) {
+      return { item }
+    }
+    const filteredItems = item.items.filter((nested) => {
+      if (nested.seasons) {
+        return nested.seasons.includes(season)
+      }
+      return false
+    })
+    return { item: { ...item, items: filteredItems } }
+  })
+  const resultContent = filteredResults.map(({ item }) => renderCatalogFullItem(item)).join('')
   const firstItem = expandedResults[0]?.item
 
   return new Response(

@@ -154,6 +154,7 @@ class BetorCatalog {
         fs: item.torrent_files,
         np: item.torrent_num_peers,
         ns: item.torrent_num_seeds,
+        ss: item.seasons,
         ua: item.updated_at,
         ia: item.inserted_at
       }))
