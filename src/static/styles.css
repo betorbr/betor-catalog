@@ -319,6 +319,7 @@ section > h2 {
 }
 
 .item > .updated > p {
+  margin: .25rem 0;
   color: rgba(255, 255, 255, .5);
   font-size: .75rem;
   text-align: center;
