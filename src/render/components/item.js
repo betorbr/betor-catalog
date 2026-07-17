@@ -59,7 +59,8 @@ export default (item) => {
         </div>`
 : ''}
         <div class="updated">
-          <p data-updated-at="${item.updated_at}">Última atualização: ${toLocaleString(item.updated_at)}</p>
+          <p data-inserted-at="${item.inserted_at}" title="Adicionado: ${toLocaleString(item.inserted_at)}">Adicionado: ${toLocaleString(item.inserted_at)}</p>
+          <p data-updated-at="${item.updated_at}" title="Última atualização: ${toLocaleString(item.updated_at)}">Última atualização: ${toLocaleString(item.updated_at)}</p>
         </div>
       </div>
   `
