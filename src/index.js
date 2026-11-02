@@ -14,7 +14,7 @@ const SEARCH_CATALOG_PATH = 'src/_data/searchCatalog.json'
 class BetorCatalog {
   constructor (options) {
     this.options = options
-    this.itMdbApiQueue = new PQueue({ intervalCap: 20, interval: 1000 })
+    this.itMdbApiQueue = new PQueue({ intervalCap: 20, interval: 3000 })
   }
 
   /*
@@ -41,7 +41,7 @@ class BetorCatalog {
 
   async getInfoFromItMdbApi (itemType, imdbId) {
     const endpoint = itemType === 'movie' ? 'movies' : 'tvshows'
-    const url = `https://it-mdb-api.dgls.me/v1/${endpoint}/${imdbId}?language=pt-BR`
+    const url = `https://it-mdb-api.dgls.me/v1/${endpoint}/${imdbId}?language=pt-BR&timeout=60`
     const options = {
       method: 'GET',
       headers: {
