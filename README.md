@@ -34,14 +34,7 @@ Esse comando mostra a ajuda do CLI e confirma que o executável está disponíve
 
 ## API BeTor
 
-O projeto depende de uma API BeTor para buscar os itens de origem. Você pode:
-
-- usar uma instância local ou própria da API;
-- usar a instância pública, desde que tenha uma chave de acesso;
-- apontar o CLI para a sua API com `--betor-api-url`;
-- autenticar o acesso com `--betor-api-authorization` quando necessário.
-
-A documentação atualizada do contrato da API fica em [docs/betor-openapi.json](docs/betor-openapi.json) e o contexto de uso no projeto está em [docs/betor-api.md](docs/betor-api.md).
+O projeto consome o endpoint público de itens da API BeTor (`https://v1.betor.top/download-items/`). Você pode apontar o CLI para outro endpoint de download de itens usando `--download-items-url`.
 
 ## Fluxo completo de build com `betor-catalog`
 
@@ -59,10 +52,10 @@ Depois do `npm link`, você já pode seguir com os comandos `betor-catalog` abai
 ### 2. Baixe os itens brutos da API BeTor
 
 ```bash
-betor-catalog data-fetch-items -b http://localhost:8000
+betor-catalog data-fetch-items
 ```
 
-Se estiver usando a instância pública, troque a URL pelo endereço informado para você e inclua o cabeçalho de autorização quando necessário.
+Por padrão, usa o endpoint público `https://v1.betor.top/download-items/`. Você pode customizar a URL com `-u` ou `--download-items-url`.
 
 ### 3. Enriqueça e consolide o catálogo
 
@@ -100,17 +93,9 @@ Inicia o servidor de desenvolvimento do Eleventy com watch.
 
 ## Parâmetros do CLI
 
-### `-b, --betor-api-url <string>`
+### `-u, --download-items-url <string>`
 
-Define a URL base da API BeTor. O padrão é `http://localhost:8000`.
-
-Se você quiser usar a sua própria instância, o projeto BeTor também é open source e está disponível em [https://github.com/betorbr/betor](https://github.com/betorbr/betor), então você pode subir a sua própria API sem depender de serviços externos.
-
-Se preferir usar a instância pública, solicite uma chave de acesso por e-mail em `betor@betor.top`.
-
-### `-a, --betor-api-authorization <string>`
-
-Informa o valor do cabeçalho `Authorization` no formato Basic para acessar a API BeTor quando ela estiver protegida.
+Define a URL completa do endpoint `download-items`. O padrão é `https://v1.betor.top/download-items/`.
 
 ### `-p, --pages-limit <number>`
 

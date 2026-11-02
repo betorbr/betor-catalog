@@ -141,10 +141,8 @@ class BetorCatalog {
   async dataFetchItems () {
     console.log('fetching items from Betor API...')
 
-    const url = `${this.options.betorApiUrl}/v1/admin/download-items/`
-    const res = await fetch(url, {
-      headers: this.options.betorApiAuthorization ? { Authorization: `Basic ${this.options.betorApiAuthorization}` } : {}
-    })
+    const url = this.options.downloadItemsUrl || 'https://v1.betor.top/download-items/'
+    const res = await fetch(url)
 
     if (!res.ok) {
       throw new Error(`Error requesting items dump: ${res.status}`)

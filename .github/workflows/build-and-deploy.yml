@@ -20,7 +20,7 @@ jobs:
       run: echo "::set-output name=today::$(date +'%Y-%m-%d')"
     - run: npm ci
     - run: npm link
-    - run: betor-catalog -b ${{ vars.BETOR_API_URL }} -a ${{ secrets.BETOR_API_AUTHORIZATION }} data-fetch-items
+    - run: betor-catalog data-fetch-items
     - env:
         DATA_DOMAIN: ${{ vars.SURGE_DATA_DOMAIN }}
       run: betor-catalog --exclude-dead-torrents data-catalog-items
