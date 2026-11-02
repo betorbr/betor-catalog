@@ -2,8 +2,6 @@ import fs from 'fs'
 import { Eleventy } from '@11ty/eleventy'
 import PQueue from 'p-queue'
 
-const CACHE_DIR = '.cache'
-
 const ITEMS_PATH = 'src/_data/items.json'
 const MOVIES_PATH = 'src/_data/movies.json'
 const TVS_PATH = 'src/_data/tvs.json'
@@ -16,10 +14,7 @@ const SEARCH_CATALOG_PATH = 'src/_data/searchCatalog.json'
 class BetorCatalog {
   constructor (options) {
     this.options = options
-    this.env = {
-      tmdbApiKey: process.env.TMDB_API_KEY
-    }
-    this.tmdbApiQueue = new PQueue({ intervalCap: 2, interval: 1000 })
+    this.itMdbApiQueue = new PQueue({ intervalCap: 20, interval: 3000 })
   }
 
   /*
@@ -41,61 +36,26 @@ class BetorCatalog {
   }
 
   /*
-    Cache Utils
+    it-mdb-api
   */
 
-  getInfoCache (imdbId) {
-    try {
-      const cacheValue = fs.readFileSync(`${CACHE_DIR}/info-${imdbId}.json`)
-      return JSON.parse(cacheValue)
-    } catch (err) {
-      return null
-    }
-  }
-
-  setInfoCache (imdbId, info) {
-    try {
-      if (!fs.existsSync(CACHE_DIR)) {
-        fs.mkdirSync(CACHE_DIR, { recursive: true })
-      }
-      this.write(`${CACHE_DIR}/info-${imdbId}.json`, info)
-      console.info(`${imdbId} cached!`)
-    } catch (err) {
-      console.error(`fail to cache item info ${imdbId}: ${err.message}`)
-    }
-  }
-
-  /*
-    TMDB API
-  */
-
-  async getInfoFromTmdbAPI (itemType, imdbId) {
-    if (!this.env.tmdbApiKey) {
-      throw new Error('TMDB_API_KEY environment variable is not set')
-    }
-    const url = `https://api.themoviedb.org/3/find/${imdbId}?external_source=imdb_id&language=pt-BR`
+  async getInfoFromItMdbApi (itemType, imdbId) {
+    const endpoint = itemType === 'movie' ? 'movies' : 'tvshows'
+    const url = `https://it-mdb-api.dgls.me/v1/${endpoint}/${imdbId}?language=pt-BR&timeout=60`
     const options = {
       method: 'GET',
       headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${this.env.tmdbApiKey}`
+        accept: 'application/json'
       }
     }
-    const res = await this.tmdbApiQueue.add(() => {
-      console.log(`fetching from tmdb imdb_id:${imdbId} data: ${url}`)
+    const res = await this.itMdbApiQueue.add(() => {
+      console.log(`fetching from it-mdb-api imdb_id:${imdbId} data: ${url}`)
       return fetch(url, options)
     })
     if (!res.ok) {
       throw new Error(`Error to fetch ${url}: ${res.status}`)
     }
-    const findData = await res.json()
-    if (itemType === 'movie' && !findData.movie_results) {
-      throw new Error(`Movie not found at TMDB with imdb_id ${imdbId}`)
-    }
-    if (itemType === 'tv' && !findData.tv_results) {
-      throw new Error(`TV Show not found at TMDB with imdb_id ${imdbId}`)
-    }
-    return (itemType === 'movie' && findData.movie_results[0]) || (itemType === 'tv' && findData.tv_results[0])
+    return res.json()
   }
 
   /*
@@ -107,20 +67,26 @@ class BetorCatalog {
   }
 
   async enrichCatalogItem (catalogItem) {
-    const infoCache = this.getInfoCache(catalogItem.imdb_id)
-    if (infoCache) {
-      console.info(`Item info loaded from cache ${catalogItem.imdb_id}`)
-      return { ...infoCache, ...catalogItem }
-    }
     if (catalogItem.imdb_id) {
       try {
-        const info = await this.getInfoFromTmdbAPI(catalogItem.item_type, catalogItem.imdb_id)
+        const info = await this.getInfoFromItMdbApi(catalogItem.item_type, catalogItem.imdb_id)
         if (info) {
-          this.setInfoCache(catalogItem.imdb_id, info)
+          const yearStr = info.year ? String(info.year) : null
+          const normalizedInfo = {
+            title: info.title,
+            original_title: info.original_title,
+            overview: info.overview,
+            poster_path: info.tmdb_poster_path,
+            backdrop_path: info.tmdb_backdrop_path,
+            release_date: yearStr,
+            first_air_date: yearStr,
+            imdb_id: info.imdb_id || catalogItem.imdb_id,
+            tmdb_id: info.tmdb_id || catalogItem.tmdb_id
+          }
+          return { ...normalizedInfo, ...catalogItem }
         } else {
-          console.warn(`No info found at TMDB for item ${catalogItem.imdb_id}`)
+          console.warn(`No info found at it-mdb-api for item ${catalogItem.imdb_id}`)
         }
-        return { ...info, ...catalogItem }
       } catch (err) {
         console.warn(`Failed to enrich item ${catalogItem.imdb_id}: ${err.message}`)
         return catalogItem
@@ -175,10 +141,8 @@ class BetorCatalog {
   async dataFetchItems () {
     console.log('fetching items from Betor API...')
 
-    const url = `${this.options.betorApiUrl}/v1/admin/download-items/`
-    const res = await fetch(url, {
-      headers: this.options.betorApiAuthorization ? { Authorization: `Basic ${this.options.betorApiAuthorization}` } : {}
-    })
+    const url = this.options.downloadItemsUrl || 'https://v1.betor.top/download-items/'
+    const res = await fetch(url)
 
     if (!res.ok) {
       throw new Error(`Error requesting items dump: ${res.status}`)

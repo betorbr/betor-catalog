@@ -5,7 +5,7 @@ const providerSlugNameMapping = {
   'starck-filmes': 'Starck Filmes',
   'rede-torrent': 'Rede Torrent',
   'sem-torrent': 'Sem Torrent',
-  'hdrtorrents': 'HDR Torrents'
+  hdrtorrents: 'HDR Torrents'
 }
 
 export const providerName = (providerSlug) => (providerSlugNameMapping[providerSlug] || providerSlug)
