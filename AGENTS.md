@@ -1,14 +1,11 @@
-<!-- bmad:context -->
-<!-- Verified 2026-09-07 against 9fa448ce66f98de82e7713384348c1d2e6892634. Managed by bmad-project-context; edits inside this block are replaced on refresh. Keep anything you want preserved outside the markers. -->
-
 ## betor-catalog
 
-Node.js/Eleventy catalog project with a Cloudflare Worker search entry point. The CLI lives in `src/cli.js` and the main runtime code in `src/index.js`; the worker entry is `src/search.js`. Planning artifacts belong under `_bmad-output/`; deeper project knowledge is intended for `docs/` if and when it exists. Generated catalog data lives in `src/_data/` and should be regenerated, not hand-edited.
+Node.js/Eleventy catalog project with a Cloudflare Worker search entry point. The CLI lives in `src/cli.js` and the main runtime code in `src/index.js`; the worker entry is `src/search.js`. Feature planning and specs follow the `tlc-spec-driven` skill under `.specs/`; deeper project knowledge lives in `docs/`. Generated catalog data lives in `src/_data/` and should be regenerated, not hand-edited.
 
 ## Policy
 
 - Treat `src/_data/*.json` as generated; regenerate it through the CLI instead of editing it by hand.
-- Do not hand-edit `_bmad-output/`; those files are BMad artifacts.
+- Feature planning and implementation follow the `tlc-spec-driven` skill workflow under `.specs/`.
 
 ## Where things are
 
@@ -17,8 +14,8 @@ Node.js/Eleventy catalog project with a Cloudflare Worker search entry point. Th
 - Cloudflare Worker search entry: `src/search.js`
 - Eleventy pages and components: `src/*.11ty.js` and `src/render/`
 - Generated catalog data: `src/_data/`
-- BMad planning artifacts: `_bmad-output/planning-artifacts/`
-- Project knowledge, when added, should live in `docs/`
+- Spec-driven planning artifacts: `.specs/`
+- Project knowledge and guides: `docs/`
 
 ## Running and verifying
 
@@ -41,6 +38,3 @@ Node.js/Eleventy catalog project with a Cloudflare Worker search entry point. Th
 
 - `src/_data/*.json` is generated content and will be overwritten by the CLI flow.
 - Missing `TMDB_API_KEY` breaks catalog enrichment.
-- `docs/` is the configured project-knowledge path, but it is not present yet.
-
-<!-- /bmad:context -->
