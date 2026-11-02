@@ -67,7 +67,7 @@ Se estiver usando a instância pública, troque a URL pelo endereço informado p
 ### 3. Enriqueça e consolide o catálogo
 
 ```bash
-TMDB_API_KEY=sua_chave_tmdb betor-catalog data-catalog-items
+betor-catalog data-catalog-items
 ```
 
 Esse passo gera os arquivos consolidados em `src/_data/`.

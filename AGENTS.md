@@ -26,7 +26,6 @@ Node.js/Eleventy catalog project with a Cloudflare Worker search entry point. Th
 - Use `betor-catalog build` to build the site.
 - Use `npm run search-dev` or `npm run search-start`; both map to `wrangler dev`.
 - Use `npm run search-deploy`; it maps to `wrangler deploy`.
-- Set `TMDB_API_KEY` before `betor-catalog data-catalog-items`; TMDB enrichment throws without it.
 
 ## Conventions that differ from defaults
 
@@ -37,4 +36,3 @@ Node.js/Eleventy catalog project with a Cloudflare Worker search entry point. Th
 ## Known pitfalls
 
 - `src/_data/*.json` is generated content and will be overwritten by the CLI flow.
-- Missing `TMDB_API_KEY` breaks catalog enrichment.

@@ -18,16 +18,11 @@ jobs:
         node-version: 22
     - id: date
       run: echo "::set-output name=today::$(date +'%Y-%m-%d')"
-    - uses: actions/cache@v4
-      with:
-        path: .cache
-        key: betor-cache-${{ steps.date.outputs.today }}
     - run: npm ci
     - run: npm link
     - run: betor-catalog -b ${{ vars.BETOR_API_URL }} -a ${{ secrets.BETOR_API_AUTHORIZATION }} data-fetch-items
     - env:
         DATA_DOMAIN: ${{ vars.SURGE_DATA_DOMAIN }}
-        TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
       run: betor-catalog --exclude-dead-torrents data-catalog-items
     - env:
         DATA_DOMAIN: ${{ vars.SURGE_DATA_DOMAIN }}
